@@ -1,6 +1,6 @@
 # Prerequisites
 
-1. Setup the AWS buckets
+1. Install AWS Cli
 2. Create an access token with read and write access to the bucket
 3. Create the following secrets on the github repo: 
    - `AWS_ACCESS_KEY_ID` with the access token used to store and retrieve data from S3
@@ -11,19 +11,28 @@
 
 # Setup the S3 buckets using aws cli
 
+Create a file on the root folder named `.env.sh` with the following contents:
+
 ```bash
+#!/bin/bash
 # setup the environment variables
 export AWS_ACCESS_KEY_ID="access key here"
 export AWS_SECRET_ACCESS_KEY="secret key here"
 export AWS_DEFAULT_REGION="eu-west-2"
-export DEPLOYMENT_AWS_BUCKET="dvc-intrusion-detection-deployment"
-export REGISTRY_AWS_BUCKET="dvc-intrusion-detection-registry"
+export DEPLOYMENT_AWS_BUCKET="intrusion-detection-deployment"
+export REGISTRY_AWS_BUCKET="intrusion-detection-registry"
+```
+Create the buckets using AWS Cli
+
+```bash
+# load the variables
+source .env.sh
 
 # bucket used by DVC to store the data
-aws s3 mb "s3://$REGISTRY_AWS_BUCKET" --region "$REGISTRY_AWS_BUCKET"
+aws s3 mb "s3://$REGISTRY_AWS_BUCKET" --region "$AWS_DEFAULT_REGION"
 
 # bucket used to serve the latest model in production
-aws s3 mb "s3://$DEPLOYMENT_AWS_BUCKET" --region "$REGISTRY_AWS_BUCKET"
+aws s3 mb "s3://$DEPLOYMENT_AWS_BUCKET" --region "$AWS_DEFAULT_REGION"
 ```
 
 # Setup ML Pipeline 
