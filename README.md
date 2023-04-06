@@ -6,7 +6,7 @@
    - `AWS_ACCESS_KEY_ID` with the access token used to store and retrieve data from S3
    - `AWS_SECRET_ACCESS_KEY` with the access token's secret
    - `DEPLOYMENT_AWS_BUCKET` name of the bucket that will serve the latest production model
-   - `AWS_BUCKET_REGION` region of the buckets
+   - `AWS_DEFAULT_REGION` region of the buckets
 
 
 # Setup the S3 buckets using aws cli
