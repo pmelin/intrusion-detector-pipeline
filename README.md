@@ -57,14 +57,14 @@ dvc remote modify --local storage secret_access_key "$AWS_SECRET_ACCESS_KEY"
 # move the dev.csv file to the data folder and add it to dvc
 dvc add data/dev.csv
 
+# run the pipeline
+dvc repro
+
 # commit and push everything
 git add .
 git commit -m "dvc setup"
 dvc push
 git push
-
-# run the pipeline
-dvc repro
 
 # display the metrics
 dvc metrics show

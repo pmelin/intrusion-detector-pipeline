@@ -1,0 +1,80 @@
+schema: '2.0'
+stages:
+  prepare:
+    cmd: python src/prepare.py
+    deps:
+    - path: data/dev.csv
+      md5: 43e6512f969df7951a3584587fd00412
+      size: 36309535
+    - path: src/prepare.py
+      md5: c07f11cd57fa1aab59ef4d3fbab17745
+      size: 1525
+    params:
+      params.yaml:
+        prepare.sampling_strategy: 0.4
+        prepare.test_size: 0.3
+    outs:
+    - path: data/test_label.csv
+      md5: 8faae28e7553aa2dbe2296a323be0293
+      size: 207496
+    - path: data/test_prepared.csv
+      md5: c444ee810771bc85f20be7ddb0ae061e
+      size: 51465789
+    - path: data/train_label_resampled.csv
+      md5: 5647c4ad69eb9554ca5d65d142a2b968
+      size: 544336
+    - path: data/train_resampled.csv
+      md5: dda11c1c10513be1ace7205847b6332c
+      size: 136837130
+  train:
+    cmd: python src/train.py
+    deps:
+    - path: data/train_label_resampled.csv
+      md5: 5647c4ad69eb9554ca5d65d142a2b968
+      size: 544336
+    - path: data/train_resampled.csv
+      md5: dda11c1c10513be1ace7205847b6332c
+      size: 136837130
+    - path: src/train.py
+      md5: 0c03749c85d53cf8dc64653dd6beda4f
+      size: 743
+    params:
+      params.yaml:
+        train.n_neighbors: 7
+    outs:
+    - path: model/model.joblib
+      md5: 8aecb78d0d426506513c34c4af9897dd
+      size: 248217870
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+    - path: data/test_label.csv
+      md5: 8faae28e7553aa2dbe2296a323be0293
+      size: 207496
+    - path: data/test_prepared.csv
+      md5: c444ee810771bc85f20be7ddb0ae061e
+      size: 51465789
+    - path: data/train_label_resampled.csv
+      md5: 5647c4ad69eb9554ca5d65d142a2b968
+      size: 544336
+    - path: data/train_resampled.csv
+      md5: dda11c1c10513be1ace7205847b6332c
+      size: 136837130
+    - path: model/model.joblib
+      md5: 8aecb78d0d426506513c34c4af9897dd
+      size: 248217870
+    - path: src/evaluate.py
+      md5: 3e74ccf76d515bfc1d9dbcb4cec7992e
+      size: 2120
+    outs:
+    - path: eval/live/metrics.json
+      md5: e6af900fac7a6890865025ecc4621172
+      size: 195
+    - path: eval/live/plots
+      md5: 7b51555369b928d4dbe00f47bb6e4d79.dir
+      size: 22932930
+      nfiles: 4
+    - path: eval/prc
+      md5: 917fc86dfa3cf14a9f025ad3d224c465.dir
+      size: 2355
+      nfiles: 2
