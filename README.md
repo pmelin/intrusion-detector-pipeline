@@ -39,7 +39,7 @@ aws s3 mb "s3://$DEPLOYMENT_AWS_BUCKET" --region "$AWS_DEFAULT_REGION"
 
 ```bash
 conda env create -f conda.yaml
-conda activate dvc-intrusion-detector-pipeline
+conda activate intrusion-detector-pipeline
 
 # initial commit with some stuff to avoid dvc complaining of an empty repo
 git add .
