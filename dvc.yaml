@@ -1,0 +1,56 @@
+stages:
+  prepare:
+    cmd: python src/prepare.py
+    deps:
+    - data/dev.csv
+    - src/prepare.py
+    params:
+    - prepare.test_size
+    - prepare.sampling_strategy
+    outs:
+    - data/test_prepared.csv
+    - data/test_label.csv
+    - data/train_resampled.csv
+    - data/train_label_resampled.csv
+  train:
+    cmd: python src/train.py
+    deps:
+    - data/train_resampled.csv
+    - data/train_label_resampled.csv
+    - src/train.py
+    params:
+    - train.n_neighbors
+    outs:
+    - model/model.joblib
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+    - data/train_resampled.csv
+    - data/train_label_resampled.csv
+    - data/test_prepared.csv
+    - data/test_label.csv
+    - model/model.joblib
+    - src/evaluate.py
+    outs:
+      - eval/live/plots:
+          cache: false
+      - eval/prc:
+          cache: false
+    metrics:
+      - eval/live/metrics.json:
+          cache: false
+
+plots:
+  - Confusion-Matrix:
+      template: confusion
+      x: actual
+      y:
+        eval/live/plots/sklearn/cm/train.json: predicted
+        eval/live/plots/sklearn/cm/test.json: predicted
+  - Precision-Recall:
+      template: simple
+      x: recall
+      y:
+        eval/prc/train.json: precision
+        eval/prc/test.json: precision
+

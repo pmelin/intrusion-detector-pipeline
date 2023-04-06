@@ -1,0 +1,6 @@
+prepare:
+  test_size: 0.3
+  sampling_strategy: 0.4
+
+train:
+  n_neighbors: 7

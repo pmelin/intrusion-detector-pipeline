@@ -1,0 +1,51 @@
+name: Deploy The Model To Production
+
+on:
+  push:
+    # only runs when a tag matching this string is created by gto
+    tags:        
+      - 'model#production#*' 
+
+jobs:
+  run_code:
+    name: Deploy The Model To Production
+    runs-on: ubuntu-latest
+
+    steps:
+      # checks out the code of the tag
+      - uses: actions/checkout@v2
+      # sets up the conda environment
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: dvc-intrusion-detector-pipeline
+          environment-file: conda.yaml
+          auto-activate-base: false
+          miniconda-version: "latest"
+
+      # pulls only the model file from dvc
+      - name: Pull model from DVC
+        # we need to set this shell config on every step we use conda or it wont work
+        shell: bash -l {0}
+        run: |
+          # configures the aws credentials locally
+          dvc remote modify storage --local access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          dvc remote modify storage --local secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+          # pulls only the model file
+          dvc pull model/model.joblib
+      
+      # uploads the model and its git tag to S3
+      - name: Upload model to S3
+        run: |
+          # saves the tag of the model into a file
+          # we can use this tag name to find out the version of the model file with:
+          # gto history --plain | grep _tag_name_here_
+          echo "${{ github.ref_name }}" > ./model/tag.txt
+
+          # uploads the model and tag file to the production bucket
+          aws s3 sync ./model s3://${{ secrets.DEPLOYMENT_AWS_BUCKET }}/production
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_BUCKET_REGION }}
+      

@@ -1,0 +1,61 @@
+name: Run DVC Pipeline
+
+on:
+  push: 
+    # only runs when the changes are made on the main branch
+    branches:
+     - main 
+    # and the changes were made on files that match this list
+    paths:
+      - '*.yaml' 
+      - src/**
+      - data/*
+
+jobs:
+  run_code:
+    name: Run DVC Pipeline
+    runs-on: ubuntu-latest
+
+    # this permission is required by the git-auto-commit-action
+    permissions:
+      contents: write
+
+    steps:
+      # checks out the code of the branch
+      - uses: actions/checkout@v2
+      # sets up the conda environment
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: dvc-intrusion-detector-pipeline
+          environment-file: conda.yaml
+          auto-activate-base: false
+          miniconda-version: "latest"
+
+      # pulls all the data from DVC
+      - name: Pull data from DVC
+        # we need to set this shell config on every step we use conda or it wont work
+        shell: bash -l {0} 
+        run: |
+          dvc remote modify storage --local access_key_id ${{ secrets.aws_access_key_id }}
+          dvc remote modify storage --local secret_access_key ${{ secrets.aws_secret_access_key }}
+          # pulls all the files
+          dvc pull
+      
+      # executes the pipeline
+      - name: Run the pipeline with DVC
+        shell: bash -l {0}
+        run: |
+          dvc repro
+
+      # pushes new / changes data files to DVC
+      - name: Push the outcomes to DVC remote storage 
+        shell: bash -l {0}
+        run: dvc push
+      
+      # If there we any changes we commit and push them
+      - name: Commit changes in dvc.lock
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Commit changes in dvc.lock
+          branch: dvc-pipeline
+          file_pattern: dvc.lock
