@@ -4,6 +4,7 @@ from datetime import datetime
 from sklearn.neighbors import KNeighborsClassifier
 from joblib import dump
 import dvc.api
+from dvclive.lightning import DVCLiveLogger
 
 dvc_params = dvc.api.params_show()
 train_params=dvc_params["train"]
@@ -17,7 +18,7 @@ label_train = label_train["class"]
 start = datetime.now()
 print("Train Start:", start)
 
-neigh = KNeighborsClassifier(n_neighbors=n_neighbors) #add best parameters
+neigh = KNeighborsClassifier(n_neighbors=n_neighbors, logger=DVCLiveLogger(save_dvc_exp=True)) #add best parameters
 neigh.fit(dev_train, label_train)
 
 end = datetime.now()
