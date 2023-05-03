@@ -10,8 +10,8 @@ dvc_params = dvc.api.params_show()
 train_params=dvc_params["train"]
 n_neighbors=train_params["n_neighbors"]
 
-dev_train = pd.read_csv("./data/train_resampled.csv")
-label_train = pd.read_csv("./data/train_label_resampled.csv")
+dev_train = pd.read_csv("./data/train_prepared.csv")
+label_train = pd.read_csv("./data/train_label.csv")
 label_train = label_train["class"]
 
 # KNN

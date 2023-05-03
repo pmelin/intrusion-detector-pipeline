@@ -1,0 +1,27 @@
+schema: '2.0'
+stages:
+  prepare:
+    cmd: python src/prepare.py
+    deps:
+    - path: data/dev.csv
+      md5: 33d1ddca4abfeb61814b68955ca0326c
+      size: 21026891
+    - path: src/prepare.py
+      md5: ea1f10b17945bc42ebd8204a8d88f578
+      size: 1362
+    params:
+      params.yaml:
+        prepare.test_size: 0.3
+    outs:
+    - path: data/test_label.csv
+      md5: afe3878f3e5d34107b3fdb098dd5cf23
+      size: 120006
+    - path: data/test_prepared.csv
+      md5: 5c5ca57a502542830ecc9a2dd9131f09
+      size: 30226183
+    - path: data/train_label.csv
+      md5: d6d2db34825d5f2d7852f976dd781c15
+      size: 280004
+    - path: data/train_prepared.csv
+      md5: e67a4f67b969d35caf9721e2b0f5e2bb
+      size: 70528111

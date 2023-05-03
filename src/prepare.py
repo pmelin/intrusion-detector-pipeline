@@ -34,11 +34,9 @@ x_dev = pd.DataFrame(x_dev, columns=cols_dev)
 dev_train, dev_test, label_train, label_test = train_test_split(x_dev, y_dev, test_size=test_size, stratify=y_dev)
 # 70% training and 30% test
 
-smote = SMOTE(sampling_strategy=sampling_strategy)
-
-train_resampled, label_train_resampled = smote.fit_resample(dev_train , label_train)
-
 dev_test.to_csv('./data/test_prepared.csv', index=False)
 label_test.to_csv('./data/test_label.csv', index=False)
-train_resampled.to_csv('./data/train_resampled.csv', index=False)
-label_train_resampled.to_csv('./data/train_label_resampled.csv', index=False)
+
+dev_train.to_csv('./data/train_prepared.csv', index=False)
+label_train.to_csv('./data/train_label.csv', index=False)
+

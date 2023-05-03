@@ -6,17 +6,16 @@ stages:
     - src/prepare.py
     params:
     - prepare.test_size
-    - prepare.sampling_strategy
     outs:
     - data/test_prepared.csv
     - data/test_label.csv
-    - data/train_resampled.csv
-    - data/train_label_resampled.csv
+    - data/train_prepared.csv
+    - data/train_label.csv
   train:
     cmd: python src/train.py
     deps:
-    - data/train_resampled.csv
-    - data/train_label_resampled.csv
+    - data/train_prepared.csv
+    - data/train_label.csv
     - src/train.py
     params:
     - train.n_neighbors
@@ -25,8 +24,8 @@ stages:
   evaluate:
     cmd: python src/evaluate.py
     deps:
-    - data/train_resampled.csv
-    - data/train_label_resampled.csv
+    - data/train_prepared.csv
+    - data/train_label.csv
     - data/test_prepared.csv
     - data/test_label.csv
     - model/model.joblib

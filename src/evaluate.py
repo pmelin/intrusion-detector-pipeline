@@ -52,8 +52,8 @@ def evaluate(model, labels, x, split, live):
                         name=f"cm/{split}"
                         )
 
-dev_train = pd.read_csv("./data/train_resampled.csv")
-label_train = pd.read_csv("./data/train_label_resampled.csv")
+dev_train = pd.read_csv("./data/train_prepared.csv")
+label_train = pd.read_csv("./data/train_label.csv")
 label_train = label_train["class"]
 
 dev_test = pd.read_csv("./data/test_prepared.csv")
