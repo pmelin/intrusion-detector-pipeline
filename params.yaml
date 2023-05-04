@@ -3,4 +3,4 @@ prepare:
   sampling_strategy: 0.4
 
 train:
-  n_neighbors: 7
+  n_neighbors: 9

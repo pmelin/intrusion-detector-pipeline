@@ -4,8 +4,8 @@ stages:
     cmd: python src/prepare.py
     deps:
     - path: data/dev.csv
-      md5: 33d1ddca4abfeb61814b68955ca0326c
-      size: 21026891
+      md5: 7e10d59619d1c0d097bd8b1455dbd090
+      size: 36309432
     - path: src/prepare.py
       md5: ea1f10b17945bc42ebd8204a8d88f578
       size: 1362
@@ -14,14 +14,66 @@ stages:
         prepare.test_size: 0.3
     outs:
     - path: data/test_label.csv
-      md5: afe3878f3e5d34107b3fdb098dd5cf23
-      size: 120006
+      md5: 749afee8ed8425fddf05530f8606ab1d
+      size: 207496
     - path: data/test_prepared.csv
-      md5: 5c5ca57a502542830ecc9a2dd9131f09
-      size: 30226183
+      md5: d18d785a7638738cca3b684b684672d3
+      size: 51461068
     - path: data/train_label.csv
-      md5: d6d2db34825d5f2d7852f976dd781c15
-      size: 280004
+      md5: f0f7abd257b5bf1e3ac5a62965b9cd0f
+      size: 484144
     - path: data/train_prepared.csv
-      md5: e67a4f67b969d35caf9721e2b0f5e2bb
-      size: 70528111
+      md5: 924bebf866dcee912e15eedecf82bcfd
+      size: 120073518
+  train:
+    cmd: python src/train.py
+    deps:
+    - path: data/train_label.csv
+      md5: f0f7abd257b5bf1e3ac5a62965b9cd0f
+      size: 484144
+    - path: data/train_prepared.csv
+      md5: 924bebf866dcee912e15eedecf82bcfd
+      size: 120073518
+    - path: src/train.py
+      md5: 11c8541520f6173aa4518769b7db001a
+      size: 732
+    params:
+      params.yaml:
+        train.n_neighbors: 9
+    outs:
+    - path: model/model.joblib
+      md5: fba6ecb7700b550d53d8309e3d950887
+      size: 220770318
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+    - path: data/test_label.csv
+      md5: 749afee8ed8425fddf05530f8606ab1d
+      size: 207496
+    - path: data/test_prepared.csv
+      md5: d18d785a7638738cca3b684b684672d3
+      size: 51461068
+    - path: data/train_label.csv
+      md5: f0f7abd257b5bf1e3ac5a62965b9cd0f
+      size: 484144
+    - path: data/train_prepared.csv
+      md5: 924bebf866dcee912e15eedecf82bcfd
+      size: 120073518
+    - path: model/model.joblib
+      md5: fba6ecb7700b550d53d8309e3d950887
+      size: 220770318
+    - path: src/evaluate.py
+      md5: 614bfedfb01fa431afc01b6ec195689e
+      size: 2109
+    outs:
+    - path: eval/live/metrics.json
+      md5: 2359b22fb28c8fe708605d57193042d4
+      size: 194
+    - path: eval/live/plots
+      md5: 2213b9cf782bc7f9e01eead49fc3f6cf.dir
+      size: 21097652
+      nfiles: 4
+    - path: eval/prc
+      md5: 45467a96e9e6933b7c432e0e916585a9.dir
+      size: 2957
+      nfiles: 2
