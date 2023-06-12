@@ -14,15 +14,9 @@ label_train = pd.read_csv("./data/train_label.csv")
 label_train = label_train["class"]
 
 # KNN
-start = datetime.now()
-print("Train Start:", start)
 
-neigh = KNeighborsClassifier(n_neighbors=n_neighbors) #add best parameters
+neigh = KNeighborsClassifier(n_neighbors=n_neighbors)
 neigh.fit(dev_train, label_train)
-
-end = datetime.now()
-print("Train End:", end)
-print(end -start)
 
 if not os.path.exists("./model"):
    os.makedirs("./model")

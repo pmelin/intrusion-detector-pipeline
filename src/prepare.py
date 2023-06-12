@@ -1,14 +1,11 @@
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
-from imblearn.over_sampling import SMOTE
-from collections import Counter
 import dvc.api
 
 dvc_params = dvc.api.params_show()
 prepare_params=dvc_params["prepare"]
 test_size=prepare_params["test_size"]
-sampling_strategy=prepare_params["sampling_strategy"]
 
 dev = pd.read_csv("./data/dev.csv")
 
@@ -19,7 +16,7 @@ dev = dev.loc[:, (dev != dev.iloc[0]).any()]
 x_dev = pd.get_dummies(dev).drop('class', axis=1)
 y_dev = dev["class"]  # Target variable
 
-# Drop not used collumns
+# Drop not used columns
 x_dev = x_dev.drop('service_red_i', axis=1)
 x_dev = x_dev.drop('service_pm_dump', axis=1)
 x_dev = x_dev.drop('service_tftp_u', axis=1)
