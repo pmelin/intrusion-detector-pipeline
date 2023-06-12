@@ -1,0 +1,3 @@
+defaults:
+  - train: "default"
+  - prepare: "default"
