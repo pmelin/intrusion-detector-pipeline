@@ -1,4 +1,4 @@
-name: dvc-intrusion-detector-pipeline
+name: intrusion-detector-pipeline
 
 channels:
   - conda-forge

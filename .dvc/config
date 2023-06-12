@@ -1,4 +1,6 @@
 [core]
     remote = storage
+[hydra]
+    enabled = True
 ['remote "storage"']
     url = s3://intrusion-detection-registry/dvc
