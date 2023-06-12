@@ -6,6 +6,7 @@
    - `AWS_ACCESS_KEY_ID` with the access token used to store and retrieve data from S3
    - `AWS_SECRET_ACCESS_KEY` with the access token's secret
    - `DEPLOYMENT_AWS_BUCKET` name of the bucket that will serve the latest production model
+   - `RETRAIN_AWS_BUCKET` name of the bucket that will store the latest data
    - `AWS_DEFAULT_REGION` region of the buckets
 
 
@@ -21,6 +22,7 @@ export AWS_SECRET_ACCESS_KEY="secret key here"
 export AWS_DEFAULT_REGION="eu-west-2"
 export DEPLOYMENT_AWS_BUCKET="intrusion-detection-deployment"
 export REGISTRY_AWS_BUCKET="intrusion-detection-registry"
+export RETRAIN_AWS_BUCKET="intrusion-detection-retrain-data"
 ```
 Create the buckets using AWS Cli
 
@@ -32,6 +34,9 @@ source .env.sh
 aws s3 mb "s3://$REGISTRY_AWS_BUCKET" --region "$AWS_DEFAULT_REGION"
 
 # bucket used to serve the latest model in production
+aws s3 mb "s3://$DEPLOYMENT_AWS_BUCKET" --region "$AWS_DEFAULT_REGION"
+
+# bucket used by DVC to store the latest data
 aws s3 mb "s3://$DEPLOYMENT_AWS_BUCKET" --region "$AWS_DEFAULT_REGION"
 ```
 
@@ -48,6 +53,9 @@ git push
 
 # initializes the dvc config
 dvc init
+
+#Enables Hydra Composition feature
+dvc config hydra.enabled True
 
 # adds remote storage on the S3 bucket
 dvc remote add -d storage "s3://$REGISTRY_AWS_BUCKET/dvc"
