@@ -63,7 +63,7 @@ label_test = label_test["class"]
 model = load('./model/model.joblib') 
 
 # Evaluate train and test datasets.
-live = Live(os.path.join(EVAL_PATH, "live"), dvcyaml=False)
+live = Live(os.path.join(EVAL_PATH, "live"), dvcyaml=False, save_dvc_exp=True)
 evaluate(model, label_train, dev_train, "train", live)
 evaluate(model, label_test, dev_test, "test", live)
 live.make_summary()
