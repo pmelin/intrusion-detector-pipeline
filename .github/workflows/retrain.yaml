@@ -1,3 +1,4 @@
+name: Retrain Pipeline
 on:
 # trigger that allows you to manually trigger a GitHub Action, without having to push or create a pull request
   workflow_dispatch:
